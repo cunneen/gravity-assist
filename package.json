@@ -1,0 +1,23 @@
+{
+  "name": "gravity-assist",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Mike Cunneen <mike@appworkshop.net>",
+  "license": "MIT",
+  "bin": "gravity-assist.sh",
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@dotenvx/dotenvx": "^1.38.4",
+    "git-cliff": "^2.8.0",
+    "husky": "^9.1.7",
+    "release-it": "^18.1.2"
+  },
+  "scripts": {
+    "testdotenvx": "dotenvx run -- node sayhello.js",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit",
+    "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
+    "release": "dotenvx run release-it -- -i -u"
+  }
+}
