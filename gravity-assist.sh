@@ -154,7 +154,7 @@ if [ "${NEW_OR_EXISTING}" == "new" ]; then
   npx license
   echo "---- Initialising npm ... ----"
   npm init
-  npm pkg set "private"=true
+  npm pkg set "private"=false
   echo "---- Initialising GitHub repo ----"
 
   gh repo create ${NEW_FOLDER_NAME} \
