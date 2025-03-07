@@ -129,10 +129,6 @@ echo "${NEW_FOLDER_NAME} selected as new project/folder name."
 
 # ==== END OF CONFIGURATION ====
 
-# get the current dir for this script
-reldir=$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")
-DIR="$(realpath "${PWD}/${reldir}")"
-
 # ===== MAIN SCRIPT =======
 
 echo "---- Checking gh auth status ... ----"
