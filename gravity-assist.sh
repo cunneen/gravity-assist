@@ -241,7 +241,7 @@ git commit -m "test commit" --dry-run >/dev/null 2>&1 || COMMITWORKED=0;
 
 if [ ${COMMITWORKED} -eq 1 ]; then
   # we have a problem, that shouldn't have worked.
-  echo "!!!!!!!! ERROR !!!!!!!!\n\n" >&2
+  echo "++++++++++ ERROR ++++++++++\n\n" >&2
   echo "Our commit linting isn't working as expected \n\n" >&2
   exit 2
 else
