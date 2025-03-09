@@ -170,7 +170,24 @@ if [ "${NEW_OR_EXISTING}" == "new" ]; then
   echo ${NVM_NODE_MIN_VERSION} > .nvmrc && nvm use ${NVM_NODE_MIN_VERSION}
   echo "---- Initialising git ... ----"
   git init .
-  echo "# foobar" >> README.md
+  USER_GIT_NAME=$(git config --global user.name)
+  USER_GIT_EMAIL=$(git config --global user.email)
+  GITHUB_USERNAME=$(gh api user -q ".login")
+  TWITTER_USERNAME=$(gh api user -q ".twitter_username")
+  if [ "${TWITTER_USERNAME}" == "null" ]; then
+    TWITTER_USERNAME="twitter_handle"
+  fi
+  echo "setting up a README.md file"
+  # download a template readme and find and replace placeholders
+  curl -s -O https://raw.githubusercontent.com/othneildrew/Best-README-Template/refs/heads/main/BLANK_README.md
+  sed -E -e "s/project_title/${NEW_FOLDER_NAME}/g" \
+         -e "s/project_description/${DESCRIPTION}/g" \
+         -e "s/repo_name/${NEW_FOLDER_NAME}/g" \
+         -e "s/project_license/${LICENSE}/g" \
+         -e "s/github_username/${GITHUB_USERNAME}/g" \
+         -e "s/twitter_handle/${TWITTER_USERNAME}/g" \
+            BLANK_README.md > README.md
+  rm BLANK_README.md
   git init
   git add README.md
   git branch -M main
