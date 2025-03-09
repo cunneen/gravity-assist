@@ -22,6 +22,7 @@ DEFAULT_NEW_FOLDER_NAME=gravity-assist
 DEFAULT_NEW_REPO_PUBLIC_OR_PRIVATE=public
 DEFAULT_EXISTING_REPO_TO_FORK=https://github.com/cunneen/gravity-assist.git
 DEFAULT_LICENSE=MIT
+DEFAULT_DESCRIPTION="A module which... (enter your description here)"
 # node minimum version for .nvmrc
 DEFAULT_NVM_NODE_MIN_VERSION=20
 
@@ -125,6 +126,21 @@ elif [ "${NEW_OR_EXISTING}" == "new" ]; then
   echo "${LICENSE} selected."
 
   echo "--"
+  while [ "${DESCRIPTION}" == "" ] || [ ${#DESCRIPTION} -lt 4 ] || [ ${#DESCRIPTION} -gt 350 ]  ; do
+    echo "Enter a short description of your repository, to appear on GitHub and npm."
+    echo "Max 350 chars."
+    read -p "E.g. A node module for reticulating splines [$DEFAULT_DESCRIPTION]: " DESCRIPTION
+    # fall back to defaults where no values are provided
+    DESCRIPTION=${DESCRIPTION:-$DEFAULT_DESCRIPTION}
+    if [ ${#DESCRIPTION} -lt 4 ] ; then
+      echo "Description is too short."
+    elif [ ${#DESCRIPTION} -gt 350 ] ; then
+      echo "Description has a maximum length of 350 characters."
+    fi
+  done
+  echo "'${DESCRIPTION}' selected."
+
+  echo "--"
   echo "A .nvmrc file will be created in the new folder, specifying the minimum node version."
   echo "If you're not using node js, just accept the default value."
   read -p "Minimum node version [$DEFAULT_NVM_NODE_MIN_VERSION]: " NVM_NODE_MIN_VERSION
@@ -164,14 +180,25 @@ if [ "${NEW_OR_EXISTING}" == "new" ]; then
   echo "-- https://spdx.org/licenses/"
   npx license@1.0.3 ${LICENSE}
   echo "---- Initialising npm ... ----"
-  npm init
+  # get the name of the user
+  echo '{}' > package.json
+  npm pkg set "name"="${NEW_FOLDER_NAME}"
+  npm pkg set "description"="${DESCRIPTION}"
+  npm pkg set "version"="0.0.1"
+  npm pkg set "type"="module"
+  npm pkg set "main"="index.js"
+  npm pkg set "author"="${USER_GIT_NAME}"
   npm pkg set "private"=false
+  npm pkg set "publishConfig.access"="public"
+  npm pkg set "license"="${LICENSE}"
+
   echo "---- Initialising GitHub repo ----"
 
   gh repo create ${NEW_FOLDER_NAME} \
     --${NEW_REPO_PUBLIC_OR_PRIVATE} \
     --add-readme \
     --remote origin \
+    --description "${DESCRIPTION}" \
     --source .
 
 # elseif forking a github repo
