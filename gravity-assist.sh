@@ -254,22 +254,38 @@ npm add --save-dev @dotenvx/dotenvx
 ./node_modules/.bin/dotenvx  ext gitignore --pattern '!/.env'
 
 echo "HELLO=World" >> .env
-mkdir -p test
-echo "console.log('Hello ' + process.env.HELLO)" > test/testdotenvx.js
 
 # encrypt your .env file; this also creates a .env.keys file.
 ./node_modules/.bin/dotenvx encrypt
 
-# update package.json to have a 'testdotenvx' script
-npm pkg set scripts.testdotenvx="dotenvx run -- node test/testdotenvx.js"
+echo "---- setting up mocha and a test of dotenvx ----";
+# update package.json to run mocha with dotenvx when "npm run test" is invoked
+npm add --save-dev mocha chai 
+npm pkg set scripts.test="dotenvx run -- ./node_modules/.bin/mocha"
 
-npm run testdotenvx
+# The first test script that mocha will run - just tests that dotenvx is working
+mkdir -p test
+cat <<-DOTENVXTEST > test/dotenvx.test.js
+  import { assert } from "chai";
+
+  describe("dotenvx", () => {
+    it("should decrypt process.env.HELLO value", () => {
+      assert.equal(process.env.HELLO, "World");
+    });
+  });
+
+DOTENVXTEST
+
+echo "---- testing dotenvx ----";
+
+# lets give it a try
+npm run test
 
 #### commitlint
 echo "---- setting up commitlint ----";
 
 npm add --save-dev @commitlint/{cli,config-conventional}
-echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > .commitlintrc.js
+echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > .commitlintrc.cjs
 
 #### husky
 echo "---- setting up husky ----";
