@@ -38,7 +38,7 @@ trap 'catch $? $LINENO' EXIT
 catch() {
   if [ "$1" != "0" ]; then
     # error handling goes here
-    echo "(Exiting due to return code $1 on line $2)" >&2
+    echo "    (Exiting due to return code $1 on line $2)" >&2
   else
     echo "Script completed successfully"
   fi
@@ -80,7 +80,7 @@ echo "=== CONFIGURATION ==="
 echo "Please answer a few questions to configure this script, or Ctrl-C to exit."
 echo "--"
 while [ "${NEW_OR_EXISTING}" != "new" ] && [ "${NEW_OR_EXISTING}" != "existing" ]; do
-  read -p "Fork an existing repo, or create a completely new one? (new|existing)[default:$DEFAULT_NEW_OR_EXISTING]: " NEW_OR_EXISTING
+  read -p "Fork an existing repo, or create a completely new one? (new|existing) [$DEFAULT_NEW_OR_EXISTING]: " NEW_OR_EXISTING
   # fall back to defaults where no values are provided
   NEW_OR_EXISTING=${NEW_OR_EXISTING:-$DEFAULT_NEW_OR_EXISTING}
   if [ "${NEW_OR_EXISTING}" != "new" ] && [ "${NEW_OR_EXISTING}" != "existing" ]; then
@@ -93,7 +93,7 @@ if [ "${NEW_OR_EXISTING}" == "existing" ]; then
   echo "--"
   echo "This script currently only works with GitHub repositories."
   while [ "${EXISTING_REPO_TO_FORK}" == "" ] || [[ ! "${EXISTING_REPO_TO_FORK}" =~ ^https://github.com/ ]] ; do
-    read -p "Provide the full URL to the repo you want to fork (e.g. "https://github.com/cunneen/gravity-assist.git")[default:$DEFAULT_EXISTING_REPO_TO_FORK]: " EXISTING_REPO_TO_FORK
+    read -p "Provide the full URL to the repo you want to fork (e.g. "https://github.com/cunneen/gravity-assist.git")[$DEFAULT_EXISTING_REPO_TO_FORK]: " EXISTING_REPO_TO_FORK
     # fall back to defaults where no values are provided
     EXISTING_REPO_TO_FORK=${EXISTING_REPO_TO_FORK:-$DEFAULT_EXISTING_REPO_TO_FORK}
     if [[ ! "${EXISTING_REPO_TO_FORK}" =~ ^https://github.com/ ]]; then
@@ -104,7 +104,7 @@ if [ "${NEW_OR_EXISTING}" == "existing" ]; then
 elif [ "${NEW_OR_EXISTING}" == "new" ]; then
   echo "--"
   while [ "${NEW_REPO_PUBLIC_OR_PRIVATE}" != "public" ] && [ "${NEW_REPO_PUBLIC_OR_PRIVATE}" != "private" ]; do
-    read -p "Should the new GitHub repo be public or private? (public|private)[default:$DEFAULT_NEW_REPO_PUBLIC_OR_PRIVATE]: " NEW_REPO_PUBLIC_OR_PRIVATE
+    read -p "Should the new GitHub repo be public or private? (public|private) [$DEFAULT_NEW_REPO_PUBLIC_OR_PRIVATE]: " NEW_REPO_PUBLIC_OR_PRIVATE
     # fall back to defaults where no values are provided
     NEW_REPO_PUBLIC_OR_PRIVATE=${NEW_REPO_PUBLIC_OR_PRIVATE:-$DEFAULT_NEW_REPO_PUBLIC_OR_PRIVATE}
     if [ "${NEW_REPO_PUBLIC_OR_PRIVATE}" != "public" ] && [ "${NEW_REPO_PUBLIC_OR_PRIVATE}" != "private" ]; then
@@ -364,12 +364,16 @@ cat <<- "RELEASEIT" > .release-it.json
 RELEASEIT
 
 echo -e '---- Done! ----\n'
-echo 'You will probably want to check the "test" script in package.json, '
-echo 'by default it will prevent you committing. You can override it with: '
-echo -e "\n\nnpm pkg set scripts.test='echo TODO: WRITE TESTS'\n\n"
-echo 'Then try:'
-echo ' - creating the first commit WITHOUT using conventional commit comments (it should fail!)'
-echo ' - creating the first commit USING conventional commit comments'
-echo ' - pushing your commits'
-echo ' - creating a release:'
-echo '   npm run release'
+echo 'Now try the following:'
+echo -e "    cd ${NEW_FOLDER_NAME}\n\n"
+echo '  Stage the new files for our first commit:'
+echo -e "    git add .\n\n"
+echo "  Create the first commit WITHOUT using conventional commit comments -- it should fail! :"
+echo -e "    git commit -m 'first commit'\n\n"
+echo "  Create the first commit USING conventional commit comments -- it should work! :"
+echo -e "    git commit -m 'chore: first commit'\n\n"
+echo '  Push your commit to github:'
+echo -e "    git push --set-upstream origin main\n\n"
+echo '  Create your first release interactively:'
+echo '    npm run release'
+
