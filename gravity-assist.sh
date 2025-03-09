@@ -21,6 +21,7 @@ DEFAULT_NEW_OR_EXISTING=existing
 DEFAULT_NEW_FOLDER_NAME=gravity-assist
 DEFAULT_NEW_REPO_PUBLIC_OR_PRIVATE=public
 DEFAULT_EXISTING_REPO_TO_FORK=https://github.com/cunneen/gravity-assist.git
+DEFAULT_LICENSE=MIT
 # node minimum version for .nvmrc
 DEFAULT_NVM_NODE_MIN_VERSION=20
 
@@ -44,6 +45,7 @@ catch() {
 
 
 # ==== TEST FOR PREREQUISITES ====
+echo "=== CHECKING PREREQUISITES ==="
 for cmd in ${PREREQUISITES}
 do
   echo "checking for ${cmd}"
@@ -111,6 +113,17 @@ elif [ "${NEW_OR_EXISTING}" == "new" ]; then
   echo "${NEW_REPO_PUBLIC_OR_PRIVATE} selected."
 
   echo "--"
+  while [ "${LICENSE}" == "" ] || [[ ! "${LICENSE}" =~ ^(.{3,})$ ]] ; do
+    echo -e "NOTE: you can see a full list of license identifiers here: \n\n    https://spdx.org/licenses/ \n\n"
+    read -p "Enter the IDENTIFIER of the license you want to use (e.g. MIT) [$DEFAULT_LICENSE]: " LICENSE
+    # fall back to defaults where no values are provided
+    LICENSE=${LICENSE:-$DEFAULT_LICENSE}
+    if [[ ! "${LICENSE}" =~ ^(.{3,})$ ]] ; then
+      echo "Invalid license identifier"
+    fi
+  done
+  echo "${LICENSE} selected."
+
   echo "--"
   echo "A .nvmrc file will be created in the new folder, specifying the minimum node version."
   echo "If you're not using node js, just accept the default value."
@@ -146,8 +159,10 @@ if [ "${NEW_OR_EXISTING}" == "new" ]; then
   git add README.md
   git branch -M main
   git commit -m "chore: Add README.md"
-  echo "---- choose a license ... ----"
-  npx license
+  echo "---- Adding your chosen license ... ----"
+  echo "-- NOTE: you can see the full list of licenses at:"
+  echo "-- https://spdx.org/licenses/"
+  npx license@1.0.3 ${LICENSE}
   echo "---- Initialising npm ... ----"
   npm init
   npm pkg set "private"=false
