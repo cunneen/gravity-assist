@@ -1,6 +1,6 @@
 {
   "name": "gravity-assist",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "index.js",
   "author": "Mike Cunneen <mike@appworkshop.net>",
   "license": "MIT",

@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2025-03-09
+
+### 🚀 Features
+
+- :sparkles: license - improve UX
+
+### 📚 Documentation
+
+- :memo: Add transcript to README
+
+### 🎨 Styling
+
+- :art: trivial: output formatting
+
+### ⚙️ Miscellaneous Tasks
+
+- :wrench: package.json : add repo
+- :pushpin: yarn.lock
+
 ## [1.0.3] - 2025-03-07
 
 ### 🐛 Bug Fixes
