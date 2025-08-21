@@ -98,7 +98,7 @@ if [ "${NEW_OR_EXISTING}" == "existing" ]; then
   echo "--"
   echo "This script currently only works with GitHub repositories."
   while [ "${EXISTING_REPO_TO_FORK}" == "" ] || [[ ! "${EXISTING_REPO_TO_FORK}" =~ ^https://github.com/ ]] ; do
-    read -p "Provide the full URL to the repo you want to fork (e.g. "https://github.com/cunneen/gravity-assist.git")[$DEFAULT_EXISTING_REPO_TO_FORK]: " EXISTING_REPO_TO_FORK
+    read -p "Provide the full URL to the repo you want to fork (e.g. 'https://github.com/cunneen/gravity-assist.git')[$DEFAULT_EXISTING_REPO_TO_FORK]: " EXISTING_REPO_TO_FORK
     # fall back to defaults where no values are provided
     EXISTING_REPO_TO_FORK=${EXISTING_REPO_TO_FORK:-$DEFAULT_EXISTING_REPO_TO_FORK}
     if [[ ! "${EXISTING_REPO_TO_FORK}" =~ ^https://github.com/ ]]; then
