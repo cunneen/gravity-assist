@@ -5,7 +5,6 @@
   "author": "Mike Cunneen <mike@appworkshop.net>",
   "license": "MIT",
   "bin": "gravity-assist.sh",
-  "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/cunneen/gravity-assist.git"
@@ -24,6 +23,6 @@
     "prepare": "husky",
     "commitlint": "commitlint --edit",
     "release-changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag ",
-    "release": "dotenvx run release-it -- -i -u"
+    "release": "dotenvx run release-it -- -i"
   }
 }
