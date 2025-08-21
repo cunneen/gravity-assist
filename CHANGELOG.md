@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2025-08-21
+
+### 🐛 Bug Fixes
+
+- :bug: regex characters in desc or folder causes issues
+- :bug: fix quoting error
+- 🔧 package.json : release-it no longer supports "-u" ?
+
 ## [1.0.5] - 2025-03-09
 
 ### 🚀 Features
