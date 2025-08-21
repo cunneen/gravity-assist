@@ -44,6 +44,11 @@ catch() {
   fi
 }
 
+# escape_regex() function escapes special characters
+escape_regex() {                                                                                                                                                                                                               system
+    local input="$1"
+    echo "$input" | sed -E -e 's/[\/]/\\\//g; s/[.+*^$[]/\\&/g; '                   
+}
 
 # ==== TEST FOR PREREQUISITES ====
 echo "=== CHECKING PREREQUISITES ==="
@@ -139,6 +144,7 @@ elif [ "${NEW_OR_EXISTING}" == "new" ]; then
     fi
   done
   echo "'${DESCRIPTION}' selected."
+  DESCRIPTION_ESCAPED=$(escape_regex "${DESCRIPTION}")
 
   echo "--"
   echo "A .nvmrc file will be created in the new folder, specifying the minimum node version."
@@ -153,6 +159,15 @@ echo "--"
 echo "A new folder will be created in your current working directory $(PWD)."
 read -p "What is the name for the NEW folder (and project)? [$DEFAULT_NEW_FOLDER_NAME]: " NEW_FOLDER_NAME
 NEW_FOLDER_NAME=${NEW_FOLDER_NAME:-$DEFAULT_NEW_FOLDER_NAME}
+NEW_FOLDER_NAME_ESCAPED=$(escape_regex "${NEW_FOLDER_NAME}")
+
+if [ "${NEW_FOLDER_NAME}" != "${NEW_FOLDER_NAME_ESCAPED}" ]; then
+  echo "Folder name contains special characters. Exiting."
+  echo "FOLDER_NAME: ${NEW_FOLDER_NAME}"
+  echo "FOLDER_NAME_ESCAPED: ${NEW_FOLDER_NAME_ESCAPED}"
+  exit 1
+fi
+
 echo "${NEW_FOLDER_NAME} selected as new project/folder name."
 
 
@@ -181,7 +196,7 @@ if [ "${NEW_OR_EXISTING}" == "new" ]; then
   # download a template readme and find and replace placeholders
   curl -s -O https://raw.githubusercontent.com/othneildrew/Best-README-Template/refs/heads/main/BLANK_README.md
   sed -E -e "s/project_title/${NEW_FOLDER_NAME}/g" \
-         -e "s/project_description/${DESCRIPTION}/g" \
+         -e "s/project_description/${DESCRIPTION_ESCAPED}/g" \
          -e "s/repo_name/${NEW_FOLDER_NAME}/g" \
          -e "s/project_license/${LICENSE}/g" \
          -e "s/github_username/${GITHUB_USERNAME}/g" \
@@ -374,6 +389,8 @@ echo "  Create the first commit USING conventional commit comments -- it should 
 echo -e "    git commit -m 'chore: first commit'\n\n"
 echo '  Push your commit to github:'
 echo -e "    git push --set-upstream origin main\n\n"
+echo '  Add your GitHub token for automatic releases:'
+echo -e '    dotenvx set GITHUB_TOKEN $(gh auth token)\n\n'
 echo '  Create your first release interactively:'
 echo '    npm run release'
 
